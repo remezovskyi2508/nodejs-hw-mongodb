@@ -3,10 +3,7 @@ export const ctrlWrapper = (ctrl) => {
     try {
       await ctrl(req, res, next);
     } catch (error) {
-      res.status(500).json({
-        status: 500,
-        message: error.message,
-      });
+      next(error);
     }
   };
   return func;

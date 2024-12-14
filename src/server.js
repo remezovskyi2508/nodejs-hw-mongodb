@@ -2,24 +2,24 @@ import express from 'express';
 
 import cors from 'cors';
 
-import pino from 'pino-http';
-
 import contactsRouter from './routers/contacts.js';
 
 import dotenv from 'dotenv';
+
+import { logger } from './middlewares/logger.js';
+
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+
+import { errorHandler } from './middlewares/errorHandler.js';
 
 dotenv.config();
 
 export const setupServer = () => {
   const app = express();
 
-  const logger = pino({
-    transport: {
-      target: 'pino-pretty',
-    },
-  });
-
   app.use(cors());
+
+  app.use(express.json());
 
   app.use(logger);
 
@@ -27,11 +27,9 @@ export const setupServer = () => {
 
   app.use('/contacts/:contactId', contactsRouter);
 
-  app.use((req, res) => {
-    res.status(404).json({
-      message: 'Not found',
-    });
-  });
+  app.use(notFoundHandler);
+
+  app.use(errorHandler);
 
   const port = Number(process.env.PORT || 3000);
 
