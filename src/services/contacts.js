@@ -15,7 +15,7 @@ export const getContacts = async ({
   if (filter.type) {
     contactsQuery.where('contactType').equals(filter.type);
   }
-  if (filter.isFavourite ) {
+  if (filter.isFavourite) {
     contactsQuery.where('isFavourite').equals(filter.isFavourite);
   }
   const data = await contactsQuery
@@ -23,9 +23,11 @@ export const getContacts = async ({
     .limit(limit)
     .sort({ [sortBy]: sortOrder });
 
-  const totalItems = await ContactCollection.find()
-    .merge(contactsQuery)
-    .countDocuments();
+  const filters = {};
+  if (filter.type) filters.contactType = filter.type;
+  if (filter.isFavourite) filters.isFavourite = filter.isFavourite;
+
+  const totalItems = await ContactCollection.find(filters).countDocuments();
 
   const paginationData = calcPaginationData({ totalItems, page, perPage });
 
