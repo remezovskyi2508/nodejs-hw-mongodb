@@ -1,9 +1,25 @@
 import * as contactsServices from '../services/contacts.js';
 
 import createError from 'http-errors';
+import { parsePaginationParams } from '../utils/parsePaginationParams.js';
+import { parseSortParams } from '../utils/parseSortParams.js';
+import { sortByList } from '../db/models/Contact.js';
+import { parseFilterParams } from '../filters/parseFilterContactsParams.js';
+import { contactTypeList } from '../constants/contacts.js';
 
 export const getContactsController = async (req, res) => {
-  const contacts = await contactsServices.getContacts();
+  const { page, perPage } = parsePaginationParams(req.query);
+  const { sortBy, sortOrder } = parseSortParams(req.query, sortByList);
+  const filter = parseFilterParams(req.query, contactTypeList);
+
+  const contacts = await contactsServices.getContacts({
+    page,
+    perPage,
+    sortBy,
+    sortOrder,
+    filter,
+  });
+
   res.json({
     status: 200,
     message: 'Successfully found contacts!',
@@ -40,11 +56,6 @@ export const patchContactControllers = async (req, res) => {
   const { contactId } = req.params;
 
   const data = await contactsServices.patchContact(contactId, req.body);
-
-  if (!data) {
-    throw createError(404, 'Contact not found');
-  }
-
   res.json({
     status: 200,
     message: 'Successfully patched a contact!',
