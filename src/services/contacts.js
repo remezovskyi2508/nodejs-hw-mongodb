@@ -1,12 +1,11 @@
 import ContactCollection from '../db/models/Contact.js';
 import { calcPaginationData } from '../utils/calcPaginationData.js';
-import { SORT_ORDER } from '../constants/contacts.js';
 
 export const getContacts = async ({
   page = 1,
   perPage = 10,
   sortBy = '_id',
-  sortOrder = SORT_ORDER.ASC,
+  sortOrder = 'asc',
   filter = {},
 }) => {
   const limit = perPage;
