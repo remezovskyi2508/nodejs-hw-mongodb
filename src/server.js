@@ -2,6 +2,7 @@ import express from 'express';
 
 import cors from 'cors';
 
+import authRouter from './routers/auth.js';
 import contactsRouter from './routers/contacts.js';
 
 import dotenv from 'dotenv';
@@ -23,6 +24,7 @@ export const setupServer = () => {
 
   app.use(logger);
 
+  app.use('/auth', authRouter);
   app.use('/contacts', contactsRouter);
 
   app.use('/contacts/:contactId', contactsRouter);
