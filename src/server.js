@@ -12,6 +12,8 @@ import { logger } from './middlewares/logger.js';
 import { notFoundHandler } from './middlewares/notFoundHandler.js';
 
 import { errorHandler } from './middlewares/errorHandler.js';
+import { authenticate } from './middlewares/authenticate.js';
+import cookieParser from 'cookie-parser';
 
 dotenv.config();
 
@@ -22,12 +24,13 @@ export const setupServer = () => {
 
   app.use(express.json());
 
+  app.use(cookieParser());
+
   app.use(logger);
 
   app.use('/auth', authRouter);
-  app.use('/contacts', contactsRouter);
 
-  app.use('/contacts/:contactId', contactsRouter);
+  app.use('/contacts', authenticate, contactsRouter);
 
   app.use(notFoundHandler);
 
