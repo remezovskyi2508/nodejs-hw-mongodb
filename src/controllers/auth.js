@@ -13,7 +13,8 @@ const setupSession = (res, session) => {
 };
 
 export const registerController = async (req, res) => {
-  const {name, email, _id, createdAt, updatedAt } = await authServices.register(req.body);
+  const { name, email, _id, createdAt, updatedAt } =
+    await authServices.register(req.body);
   res.status(201).json({
     status: 201,
     message: 'Successfully registered a user',
@@ -23,6 +24,29 @@ export const registerController = async (req, res) => {
       _id,
       createdAt,
       updatedAt,
+    },
+  });
+};
+
+export const sendEmailController = async (req, res) => {
+  const { email } = req.body;
+  await authServices.sendResetEmail(email);
+  res.json({
+    status: 200,
+    message: 'Reset password email has been successfully sent.',
+    data: {},
+  });
+};
+
+export const resetPWDController = async (req, res) => {
+  const { password } = await authServices.resetPassword(
+    req.body,
+  );
+  res.status(201).json({
+    status: 201,
+    message: 'Successfully registered a user',
+    data: {
+      password,
     },
   });
 };

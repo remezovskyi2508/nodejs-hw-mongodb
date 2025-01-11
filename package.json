@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/index.js"
+    "start": "node src/utils/sendEmail.js"
   },
   "keywords": [],
   "author": "",
@@ -27,8 +27,11 @@
     "crypto": "^1.0.1",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "handlebars": "^4.7.8",
     "http-errors": "^2.0.0",
     "joi": "^17.13.3",
-    "mongoose": "^8.8.4"
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.8.4",
+    "nodemailer": "^6.9.16"
   }
 }

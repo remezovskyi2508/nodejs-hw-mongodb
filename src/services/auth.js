@@ -1,6 +1,11 @@
 import createHttpError from 'http-errors';
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
+import path from 'node:path';
+import { readFile } from 'fs/promises';
+import Handlebars from 'handlebars';
+import jwt from 'jsonwebtoken';
+import dotenv from 'dotenv';
 
 import UserCollection from '../db/models/User.js';
 import SessionCollection from '../db/models/Session.js';
@@ -8,6 +13,18 @@ import {
   accessTokenLifetime,
   refreshTokenLifetime,
 } from '../constants/users.js';
+
+import { sendEmail } from '../utils/sendEmail.js';
+import { TEMPLATES_DIR } from '../constants/index.js';
+
+dotenv.config();
+
+const emailTemplatePath = path.resolve(TEMPLATES_DIR, 'verify-email.html');
+
+const emailTemplateSource = await readFile(emailTemplatePath, 'utf-8');
+
+const appDomain = process.env.APP_DOMAIN;
+const jwtSecret = process.env.JWT_SECRET;
 
 const createSessionData = () => ({
   accessToken: randomBytes(30).toString('base64'),
@@ -31,6 +48,38 @@ export const register = async (payload) => {
   });
 
   return newUser;
+};
+
+export const sendResetEmail = async (email) => {
+  const user = await UserCollection.findOne({ email });
+
+  const template = Handlebars.compile(emailTemplateSource);
+
+  const token = jwt.sign({ email }, jwtSecret, { expiresIn: '5m' });
+
+  const html = template({
+    name: user['name'],
+    link: `${appDomain}/reset-password?token=${token}`,
+  });
+
+  if (!user) {
+    throw createHttpError(404, 'User not found!');
+  }
+
+  const verifyEmail = {
+    to: email,
+    subject: 'Reset password',
+    html,
+  };
+
+  try {
+    await sendEmail(verifyEmail);
+  } catch {
+    throw createHttpError(
+      500,
+      'Failed to send the email, please try again later.',
+    );
+  }
 };
 
 export const login = async ({ email, password }) => {
