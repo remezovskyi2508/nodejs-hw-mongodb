@@ -6,7 +6,7 @@
   "main": "server.js",
   "scripts": {
     "dev": "nodemon src/index.js",
-    "start": "node src/utils/sendEmail.js"
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
