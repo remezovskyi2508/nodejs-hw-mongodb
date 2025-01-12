@@ -39,17 +39,14 @@ export const sendEmailController = async (req, res) => {
 };
 
 export const resetPWDController = async (req, res) => {
-  const { password } = await authServices.resetPassword(
-    req.body,
-  );
+  await authServices.resetPassword(req.body);
   res.status(201).json({
-    status: 201,
-    message: 'Successfully registered a user',
-    data: {
-      password,
-    },
+    status: 200,
+    message: 'Password has been successfully reset.',
+    data: {},
   });
 };
+
 export const loginController = async (req, res) => {
   const session = await authServices.login(req.body);
 
