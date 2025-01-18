@@ -14,6 +14,7 @@ import { notFoundHandler } from './middlewares/notFoundHandler.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { authenticate } from './middlewares/authenticate.js';
 import cookieParser from 'cookie-parser';
+import { swaggerDocs } from './middlewares/swaggerDocs.js';
 
 dotenv.config();
 
@@ -31,6 +32,8 @@ export const setupServer = () => {
   app.use('/auth', authRouter);
 
   app.use('/contacts', authenticate, contactsRouter);
+
+  app.use('/api-docs', swaggerDocs());
 
   app.use(notFoundHandler);
 

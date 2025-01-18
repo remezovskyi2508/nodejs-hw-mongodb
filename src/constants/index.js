@@ -16,3 +16,5 @@ export const CLOUDINARY = {
   API_KEY,
   API_SECRET,
 };
+
+export const SWAGGER_PATH = path.resolve('docs', 'swagger.json');
