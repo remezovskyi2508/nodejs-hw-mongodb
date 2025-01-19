@@ -40,7 +40,7 @@ requestBody:
             type: string
             enum: ['work', 'home', 'personal']
           photo:
-            description: "Link to contact's photo"
+            description: "Contact's photo file to upload"
             type: string
             format: binary
 responses:
