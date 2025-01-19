@@ -237,7 +237,7 @@
                     "example": "home"
                   },
                   "photo": {
-                    "description": "Link to contact's photo",
+                    "description": "Contact's photo file to upload",
                     "type": "string",
                     "format": "binary"
                   }
@@ -404,7 +404,7 @@
                     ]
                   },
                   "photo": {
-                    "description": "Link to contact's photo",
+                    "description": "Contact's photo file to upload",
                     "type": "string",
                     "format": "binary"
                   }
